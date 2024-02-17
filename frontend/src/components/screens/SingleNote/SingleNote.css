@@ -1,0 +1,24 @@
+/* Add this styling to your SingleNote.css file or directly in your component */
+
+/* Styling for the Modal to make it centered */
+.ModalContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* Optional: You can adjust the width of the modal */
+.modal-dialog {
+  width: 80%;
+  max-width: 600px; /* Adjust this value based on your design preference */
+}
+
+/* Optional: You can customize other modal styles as needed */
+.modal-content {
+  border-radius: 10px;
+}
+
+/* Optional: You can customize the header, body, and footer styles */
+
+  
