@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import MainScreen from "../../MainScreen";
 import { Form, Row, Col, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ErrorMessage from "../../ErrorMessage";
 import Loading from "../../Loading";
 import axios from "axios";
 
 const RegisterScreen = () => {
+  let navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -49,8 +50,9 @@ const RegisterScreen = () => {
       );
 
       console.log(data);
-      setLoading(false)
       localStorage.setItem("userInfo", JSON.stringify(data))
+      setLoading(false)
+      navigate("/login");
 
         }catch(error){
           setError(error.response.data.message)
