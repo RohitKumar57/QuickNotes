@@ -14,71 +14,67 @@ const RegisterScreen = () => {
   // const [pic, setPic] = useState(
   //   "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
   //   );
-    const [password, setPassword] = useState("")
-    const [confirmpassword, setconfirmPassword] = useState("")
-    const [message, setMessage] = useState(null)
-    // const [picMessage, setPicMessage] = useState(null)
-    const [error, setError] = useState(false)
-    const [loading, setLoading] = useState(false)
+  const [password, setPassword] = useState("");
+  const [confirmpassword, setconfirmPassword] = useState("");
+  const [message, setMessage] = useState(null);
+  // const [picMessage, setPicMessage] = useState(null)
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-    const submitHandler = async(e) =>{
-      e.preventDefault();
+  const submitHandler = async (e) => {
+    e.preventDefault();
 
-      if(password !== confirmpassword){
-        setMessage('Passwords Do Not Match');
+    if (password !== confirmpassword) {
+      setMessage("Passwords Do Not Match");
+    } else {
+      // calling the api
+      setMessage(null);
+      try {
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+
+        setLoading(true);
+        const { data } = await axios.post(
+          "/api/users",
+          {
+            name,
+            // pic,
+            email,
+            password,
+          },
+          config
+        );
+
+        console.log(data);
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        setLoading(false);
+        navigate("/login");
+      } catch (error) {
+        setError(error.response.data.message);
+        setLoading(false);
       }
-      else{
-        // calling the api
-        setMessage(null)
-        try{
-          const config = {
-            headers: {
-              "Content-type": "application/json",
-            },
-          };
-
-          setLoading(true)
-          const { data } = await axios.post(
-        "/api/users",
-        {
-          name,
-          // pic,
-          email,
-          password,
-        },
-        config
-      );
-
-      console.log(data);
-      localStorage.setItem("userInfo", JSON.stringify(data))
-      setLoading(false)
-      navigate("/login");
-
-        }catch(error){
-          setError(error.response.data.message)
-        }
-      }
-
-      console.log(email)
     }
 
+    console.log(email);
+  };
 
+  // for posting pictures
+  // const postDetails = (pics) =>{
+  //   if(!pics){
+  //     return setPicMessage("Please Select an Image")
+  //   }
+  //   setPicMessage(null)
 
+  //   if(pics.type === 'image/jpeg' || pics.type === 'image/png' || pics.type ==='image.jpg'){
+  //     const data = new FormData();
+  //     data.append('file', pics)
+  //     data.append('upload_preset', 'QuickNotes')
 
-    // for posting pictures
-    // const postDetails = (pics) =>{
-    //   if(!pics){
-    //     return setPicMessage("Please Select an Image")
-    //   }
-    //   setPicMessage(null)
-
-    //   if(pics.type === 'image/jpeg' || pics.type === 'image/png' || pics.type ==='image.jpg'){
-    //     const data = new FormData();
-    //     data.append('file', pics)
-    //     data.append('upload_preset', 'QuickNotes')
-
-    //   }
-    // }
+  //   }
+  // }
 
   return (
     <MainScreen title="REGISTER">
@@ -103,7 +99,7 @@ const RegisterScreen = () => {
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control
-            style={{ marginBottom: "10px" }}
+              style={{ marginBottom: "10px" }}
               type="email"
               value={email}
               placeholder="Enter email"
@@ -115,7 +111,7 @@ const RegisterScreen = () => {
           <Form.Group controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control
-            style={{ marginBottom: "10px" }}
+              style={{ marginBottom: "10px" }}
               type="password"
               value={password}
               placeholder="Password"
@@ -127,7 +123,7 @@ const RegisterScreen = () => {
           <Form.Group controlId="confirmPassword">
             <Form.Label>Confirm Password</Form.Label>
             <Form.Control
-            style={{ marginBottom: "10px" }}
+              style={{ marginBottom: "10px" }}
               type="password"
               value={confirmpassword}
               placeholder="Confirm Password"

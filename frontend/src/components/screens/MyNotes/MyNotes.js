@@ -4,7 +4,7 @@ import MainScreen from "../../MainScreen";
 import Loading from "../../Loading";
 import ErrorMessage from "../../ErrorMessage";
 import SingleNote from "../SingleNote/SingleNote";
-import { Button, Card, Badge, Accordion } from "react-bootstrap";
+import { Button, Card, Badge, Accordion, Dropdown } from "react-bootstrap";
 import axios from "axios";
 
 const MyNotes = () => {
@@ -14,6 +14,8 @@ const MyNotes = () => {
   const [notes, setNotes] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [editingNote, setEditingNote] = useState(null);
+  const [filter, setFilter] = useState("all");
+  const [filteredNotes, setFilteredNotes] = useState([]);
   let navigate = useNavigate();
 
   //Deleting a particular Note
@@ -116,16 +118,78 @@ const MyNotes = () => {
     setShowCreateNoteModal(true);
   };
 
+  // Filtering the notes
+  useEffect(() => {
+    if (filter === "all") {
+      setFilteredNotes(notes);
+    } else if (filter === "past5days") {
+      const past5DaysNotes = notes.filter((note) => {
+        const createdAt = new Date(note.createdAt);
+        const today = new Date();
+        const timeDiff = today - createdAt;
+        const fiveDaysInMillis = 5 * 24 * 60 * 60 * 1000;
+        return timeDiff <= fiveDaysInMillis; 
+      });
+      setFilteredNotes(past5DaysNotes);
+    } else if (filter === "past10days") {
+      const past10DaysNotes = notes.filter((note) => {
+        const createdAt = new Date(note.createdAt);
+        const today = new Date();
+        const timeDiff = today - createdAt;
+        const tenDaysInMillis = 10 * 24 * 60 * 60 * 1000;
+        return timeDiff <= tenDaysInMillis; 
+      });
+      setFilteredNotes(past10DaysNotes);
+    }
+  }, [filter, notes]);
+
+
   return (
     <MainScreen title={`Welcome back ${userInfo ? userInfo.name : ""}`}>
       {/* <Link to="/createnote"> */}
-      <Button
-        style={{ marginLeft: 10, marginBottom: 6 }}
-        size="lg"
-        onClick={handleCreateNote}
-      >
-        Create New Note
-      </Button>
+      <Card style={{ flexDirection: "row", justifyContent: "space-between", alignItems:"center", border: "none" }}>
+        <Card
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            border: "none",
+          }}
+        >
+          <Button
+            style={{ marginLeft: 10, marginBottom: 6 }}
+            size="lg"
+            onClick={handleCreateNote}
+          >
+            Create New Note
+          </Button>
+        </Card>
+        <Card
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            border: "none",
+            color: "black"
+          }}
+        >
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+              Filter Notes
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setFilter("all")}>
+                All Notes
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setFilter("past5days")}>
+                Past 5 Days
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setFilter("past10days")}>
+                Past 10 Days
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Card>
+      </Card>
       {/* </Link> */}
       <SingleNote
         showModal={showCreateNoteModal}
@@ -138,7 +202,7 @@ const MyNotes = () => {
       />
       {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
       {loading && <Loading />}
-      {notes.map((note) => (
+      {filteredNotes.map((note) => (
         <Accordion defaultActiveKey={["0"]} key={note._id}>
           <Accordion.Item eventkey="0">
             <Card style={{ margin: 10 }}>

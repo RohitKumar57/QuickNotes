@@ -1,6 +1,6 @@
 //Require env file
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({path: '../.env'});
 
 //Connect to mongodb using mongoose
 const mongoose = require("mongoose");
